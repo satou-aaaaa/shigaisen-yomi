@@ -15,7 +15,7 @@ import { checkDepth } from "./depth-check.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok: !!ok, detail: String(detail).slice(0, 400) });
-const firstClose = async (q) => { if (await q.locator("#howto[open]").count()) await q.click("#howto-ok"); if (await q.locator("#core-coach").count()) { await q.evaluate(() => Core.coach.leave()); await q.waitForTimeout(100); } }; // はじめての練習の吹き出しをやめてホームへ（sync-template の migrateFirstQa が足した）
+const firstClose = async (q) => { if (await q.locator("#howto[open]").count()) await q.click("#howto-ok"); if (await q.evaluate(() => !!(window.Core && Core.coach && Core.coach.active()))) { await q.evaluate(() => { Core.coach.leave(); scrollTo(0, 0); }); await q.waitForTimeout(100); } }; // はじめての練習の吹き出しをやめてホームへ（sync-template の migrateFirstQa が足した）
 const G = createRequire(import.meta.url)(path.join(root, "data.js"));
 
 const PINS = "u1:5:3.2,u13:7:2.0,u10:0:0.1.2,u12:8:1.3.2,noon70:0:4.0.2,spf:1:4.3.2,u11:1:3.1.2,high:0:2.1.4;summer:0:2.0,noon:2:3.4,shade:2:0.4.1,u6:0:4.3.0,spf:2:0.4.1,u3:0:2.0.4,hat:0:0.4.2,u8:6:2.4.1;noon:2:4.0,u1:8:2.4,u6:9:3.4.1,u10:4:0.4.2,spf:2:1.0.3,u8:0:4.2.1,u3:9:0.2.3,sand:1:2.1.3"; // 過去の日の問題の印（変わったら過去の日の問題が変わった印。種類・言い方は足すだけでも変わる）
